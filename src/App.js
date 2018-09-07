@@ -6,6 +6,7 @@ import './App.css';
 
 import Navbar from './components/nav';
 import GraficoTemp from './components/GraficoTemp';
+import TempProm from './components/TempProm';
 
 class App extends Component {
   state = {
@@ -66,9 +67,9 @@ class App extends Component {
       <div>
         <Navbar/>
         <Grid container style={{padding: 40}} spacing={16} justify="flex-start" alignContent="flex-start">
-          <Grid item sm={12} lg={4} zeroMinWidth={100}>
-            <GraficoTemp data={this.state.grafData}/>
-          </Grid>
+        <Grid item xs={12} sm={12} lg={4} zeroMinWidth={100}>
+          <TempProm></TempProm>
+        </Grid>
           <Grid item sm={12} lg={4} zeroMinWidth={100}>
             <GraficoTemp data={this.state.grafData}/>
           </Grid>
