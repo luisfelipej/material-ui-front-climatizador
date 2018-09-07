@@ -8,7 +8,7 @@ const TempProm = props => (
     <Card>
         <CardHeader title="hola"><CardIcon title ="20"/></CardHeader>
         <CardContent>
-            <Grid justify="space-between" alignItems="flex-start">
+            <Grid container>
                 <Typography color="inherit">Temperatura Promedio</Typography>
                 <Typography color="inherit">Temperata Maxima</Typography>
                 <Typography color="inherit">Temperata Minima</Typography>

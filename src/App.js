@@ -7,6 +7,7 @@ import './App.css';
 import Navbar from './components/nav';
 import GraficoTemp from './components/GraficoTemp';
 import TempProm from './components/TempProm';
+import ConfigUsuario from './components/ConfigUsuario';
 
 class App extends Component {
   state = {
@@ -66,12 +67,13 @@ class App extends Component {
     return (
       <div>
         <Navbar/>
-        <Grid container style={{padding: 40}} spacing={16} justify="flex-start" alignContent="flex-start">
-        <Grid item xs={12} sm={12} lg={4} zeroMinWidth={100}>
-          <TempProm></TempProm>
+        <Grid container style={{padding: 40}} spacing={16}>
+        <Grid item xs={12} sm={12} lg={4} md={4}>
+          <TempProm />
+          <ConfigUsuario />
         </Grid>
-          <Grid item sm={12} lg={4} zeroMinWidth={100}>
-            <GraficoTemp data={this.state.grafData}/>
+          <Grid item sm={12} lg={8} md={8}>
+            <GraficoTemp data={this.state.grafData} temp={this.state.temp}/>
           </Grid>
         </Grid>
       </div>
