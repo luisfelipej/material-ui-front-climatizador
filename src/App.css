@@ -44,3 +44,7 @@
     background: transparent;
 
 }
+.cardHeader-title{
+    display: flex;
+    justify-content: flex-end;
+}
