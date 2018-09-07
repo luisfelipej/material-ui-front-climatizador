@@ -66,11 +66,8 @@ class App extends Component {
       <div>
         <Navbar/>
         <Grid container style={{padding: 40}} spacing={16} justify="flex-start" alignContent="flex-start">
-          <Grid item sm={12} lg={4} zeroMinWidth={100}>
-            <GraficoTemp data={this.state.grafData}/>
-          </Grid>
-          <Grid item sm={12} lg={4} zeroMinWidth={100}>
-            <GraficoTemp data={this.state.grafData}/>
+          <Grid item sm={12} lg={8} md={8} zeroMinWidth>
+            <GraficoTemp data={this.state.grafData} temp={this.state.temp}/>
           </Grid>
         </Grid>
       </div>
