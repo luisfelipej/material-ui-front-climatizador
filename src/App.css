@@ -29,6 +29,7 @@
     margin-top: -40px;
     margin-right: 15px;
     margin-left: 12px;
+    margin-bottom: 12px;
     float: left;
     min-width: 90px;
     max-width: 90px;
@@ -38,8 +39,12 @@
 }
 .cardHeader{
     padding: 0.75rem 1.25rem;
-    margin-bottom: 0;
+    margin-bottom: 12px;
     border-bottom: none;
     background: transparent;
 
+}
+.cardHeader-title{
+    display: flex;
+    justify-content: flex-end;
 }
