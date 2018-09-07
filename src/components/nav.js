@@ -19,7 +19,7 @@ class Navbar extends Component{
         const { anchorEl } = this.state;
         return(
             <div>
-                <AppBar position="static" color="secondary">
+                <AppBar position="static" color="inherit">
                     <Toolbar>
                         <Grid container justify="space-between" alignItems="center">
                             <Avatar src="/lookair.png" alt="logo" />

@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader } from '@material-ui/core';
 
 const GraficoTemp = props => (
     <Card>
-        <CardHeader></CardHeader>
+        <CardHeader title="HOLA">
+        </CardHeader>
         <CardContent>
             <Line data={props.data} />
         </CardContent>
