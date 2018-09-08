@@ -6,7 +6,7 @@ import CardIcon from './CardIcon';
 
 const TempProm = props => (
     <Card>
-        <CardHeader title="hola"><CardIcon title ="20"/></CardHeader>
+        <CardHeader title="hola"><CardIcon title ={props.tempU}/></CardHeader>
         <CardContent>
             <Grid container>
                 <Typography color="inherit">Temperatura Promedio</Typography>

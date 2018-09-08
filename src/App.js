@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import socketIOClient from 'socket.io-client';
-import { Grid } from '@material-ui/core';
+import { Grid, Snackbar, SnackbarContent, Typography, IconButton } from '@material-ui/core';
+import { Error as ErrorIcon, Close as CloseIcon } from '@material-ui/icons';
 
 import './App.css';
 
@@ -11,8 +12,10 @@ import ConfigUsuario from './components/ConfigUsuario';
 
 class App extends Component {
   state = {
+    snackOpen: false,
     endpoint: 'http://localhost:4001',
     temp: 'ARDUINO DESCONECTADO',
+    tempUsuario: '20',
     connected: false,
     contTemp: 0,
     grafData: {
@@ -20,6 +23,7 @@ class App extends Component {
           datasets: [
               {
               label: 'Temperatura en °C',
+              fill: null,
               backgroundColor: 'rgba(75,192,192,0.4)',
               borderColor: 'rgba(75,192,192,1)',
               pointBorderColor: 'rgba(75,192,192,1)',
@@ -59,9 +63,11 @@ class App extends Component {
       })
     });
     socket.on('close', ()=>{
-      this.setState({temp: 'ARDUINO DESCONECTADO', connected: false});
-      // M.toast({html:'Se desconectó ARDUINO', classes:'red darken-4'});
+      this.setState({temp: 'ARDUINO DESCONECTADO', connected: false, snackOpen: true});
     });
+    socket.on('tempUsuario', (data)=>{
+      this.setState({tempUsuario: data});
+    })
   }
   render() {
     return (
@@ -69,13 +75,48 @@ class App extends Component {
         <Navbar/>
         <Grid container style={{padding: 40}} spacing={16}>
         <Grid item xs={12} sm={12} lg={4} md={4}>
-          <TempProm />
-          <ConfigUsuario />
+          <TempProm tempU={this.state.tempUsuario}/>
+          <ConfigUsuario tempUsuario={this.state.tempUsuario}/>
         </Grid>
           <Grid item sm={12} lg={8} md={8}>
             <GraficoTemp data={this.state.grafData} temp={this.state.temp}/>
           </Grid>
         </Grid>
+
+
+
+        {/* SNACK */}
+        <Snackbar anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={this.state.snackOpen}
+        autoHideDuration={6000}
+        onClose={(event, reason)=>{
+          if(reason === 'clickaway') return;
+          this.setState({snackOpen: false})
+        }}
+        >
+          <SnackbarContent
+          style={{backgroundColor: 'rgb(211,47,47)'}}
+          aria-describedby="client-snackbar"
+          message={
+            <span style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
+              <ErrorIcon style={{marginRight: '5px'}} /> <Typography color="inherit">Se desconectó arduino</Typography>
+            </span>
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={()=>this.setState({snackOpen: false})}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+          />
+        </Snackbar>
       </div>
     );
   }
