@@ -1,5 +1,6 @@
 {
   "name": "uifront",
+  "main": "main.js",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

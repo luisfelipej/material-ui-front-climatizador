@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import socketIOClient from 'socket.io-client';
-import { Grid, Snackbar, SnackbarContent, Typography, IconButton } from '@material-ui/core';
-import { Error as ErrorIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Grid } from '@material-ui/core';
+
 
 import './App.css';
 
@@ -9,13 +9,17 @@ import Navbar from './components/nav';
 import GraficoTemp from './components/GraficoTemp';
 import TempProm from './components/TempProm';
 import ConfigUsuario from './components/ConfigUsuario';
+import Snack from './components/Snack';
 
 class App extends Component {
   state = {
     snackOpen: false,
     endpoint: 'http://localhost:4001',
-    temp: 'ARDUINO DESCONECTADO',
+    temp: '',
+    tempPromedio: '',
     tempUsuario: '20',
+    tempMaxima: 0,
+    tempMinima: 31,
     connected: false,
     contTemp: 0,
     grafData: {
@@ -24,11 +28,11 @@ class App extends Component {
               {
               label: 'Temperatura en °C',
               fill: null,
-              backgroundColor: 'rgba(75,192,192,0.4)',
-              borderColor: 'rgba(75,192,192,1)',
-              pointBorderColor: 'rgba(75,192,192,1)',
+              backgroundColor: 'rgba(0,221,0,.6)',
+              borderColor: 'rgba(0,221,0,.6)',
+              pointBorderColor: 'rgba(0,221,0,.6)',
               pointBackgroundColor: '#fff',
-              pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+              pointHoverBackgroundColor: 'rgba(0,221,0,.6)',
               pointHoverBorderColor: 'rgba(220,220,220,1)',
               data: []
               }
@@ -49,12 +53,6 @@ class App extends Component {
               datasets: [
                   {
                   label: 'Temperatura en °C',
-                  backgroundColor: 'rgba(75,192,192,0.4)',
-                  borderColor: 'rgba(75,192,192,1)',
-                  pointBorderColor: 'rgba(75,192,192,1)',
-                  pointBackgroundColor: '#fff',
-                  pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-                  pointHoverBorderColor: 'rgba(220,220,220,1)',
                   data: [...this.state.grafData.datasets[0].data, temp],
                   steppedLine:  false
                   }
@@ -63,60 +61,42 @@ class App extends Component {
       })
     });
     socket.on('close', ()=>{
-      this.setState({temp: 'ARDUINO DESCONECTADO', connected: false, snackOpen: true});
+      this.setState({temp: '', connected: false, snackOpen: true});
     });
     socket.on('tempUsuario', (data)=>{
       this.setState({tempUsuario: data});
     })
   }
+  sumaTemps(data){
+    let suma = 0;
+    for (let i=0;i<data.length;i++){
+      suma += Number(data[i]);
+      if(Number(data[i])>Number(this.state.tempMaxima)) this.setState({tempMaxima: Number(data[i])})
+      if(Number(data[i])<Number(this.state.tempMinima)) this.setState({tempMinima: Number(data[i])})
+    }
+    return suma;
+  }
   render() {
+    const SUMTEMP = this.sumaTemps(this.state.grafData.datasets[0].data);
+    const PROM = (SUMTEMP/this.state.grafData.datasets[0].data.length).toFixed(1);
+    console.log(PROM)
     return (
-      <div>
+      <div style={{backgroundColor: 'rgb(10,11,17)'}}>
         <Navbar/>
         <Grid container style={{padding: 40}} spacing={16}>
         <Grid item xs={12} sm={12} lg={4} md={4}>
-          <TempProm tempU={this.state.tempUsuario}/>
-          <ConfigUsuario tempUsuario={this.state.tempUsuario}/>
+          <TempProm prom={PROM}  tempU={this.state.tempUsuario} tmax={this.state.tempMaxima} tmin={this.state.tempMinima}/>
+          <ConfigUsuario tempUsuario={this.state.tempUsuario} />
         </Grid>
           <Grid item sm={12} lg={8} md={8}>
-            <GraficoTemp data={this.state.grafData} temp={this.state.temp}/>
+            <GraficoTemp data={this.state.grafData} temp={this.state.temp} />
           </Grid>
         </Grid>
 
 
 
         {/* SNACK */}
-        <Snackbar anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
-        open={this.state.snackOpen}
-        autoHideDuration={6000}
-        onClose={(event, reason)=>{
-          if(reason === 'clickaway') return;
-          this.setState({snackOpen: false})
-        }}
-        >
-          <SnackbarContent
-          style={{backgroundColor: 'rgb(211,47,47)'}}
-          aria-describedby="client-snackbar"
-          message={
-            <span style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
-              <ErrorIcon style={{marginRight: '5px'}} /> <Typography color="inherit">Se desconectó arduino</Typography>
-            </span>
-          }
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={()=>this.setState({snackOpen: false})}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-          />
-        </Snackbar>
+        <Snack estado={this.state.snackOpen} off={()=>this.setState({snackOpen: false})}/>
       </div>
     );
   }

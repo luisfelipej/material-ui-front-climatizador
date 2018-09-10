@@ -14,40 +14,76 @@ import {Typography,
 import { SettingsOutlined } from '@material-ui/icons';
 import Card from './Card';
 
+import socketIo from 'socket.io-client';
+const socket = socketIo('http://localhost:4001');
+
 
 class ConfigUsuario extends Component{
     state = {
-        open: false,
-        tempUsuario: this.props.tempUsuario
+        openTemp: false,
+        openPC: false,
+        openPV: false,
+        tempUsuario: this.props.tempUsuario,
+        consumoCa: '',
+        consumoVe: ''
     }
     handleClose = ()=>{
-        this.setState({open: false})
+        this.setState({openTemp: false, openPC: false, openPV: false})
     }
     handleClickOpen = () =>{
-        this.setState({open: true})
+        this.setState({openTemp: true})
     }
-    handleSend = (tempUsuario) => {
-        // this.props.handleTempUsuario(tempUsuario);
-        this.setState({open: false})
-        // io.emit('clientTemp',this.state.tempUsuario);
+    handleSend = () => {
+        this.setState({openTemp: false})
+        socket.emit('clientTemp', this.state.tempUsuario);
     }
     render(){
         return(
             <Card>
                 <CardContent>
-                    <Grid container>
+                    <Grid container >
                         <Grid item alignContent="center" style={{display: 'flex', marginBottom: '2em'}}>
                             <SettingsOutlined/>
-                            <Typography variant="title">Configuraciones</Typography>
+                            <Typography variant="title" color="inherit">Configuraciones</Typography>
                         </Grid>
-                        <Grid item spacing={16} alignItems="center" style={{display:'flex', justifyContent:'space-around'}}>
-                            <Button onClick={this.handleClickOpen} style={{marginRight: '32px'}}>Temperatura deseada</Button>
-                            <Typography>{ `${this.state.tempUsuario}°C`}</Typography>
+                        <Grid container spacing={16} alignItems="center" justify="space-between" >
+                            <Grid item>
+                                <Button color="inherit" onClick={this.handleClickOpen} >Temperatura deseada</Button>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="inherit">{ `${this.props.tempUsuario}°C`}</Typography>
+                            </Grid>
+                        </Grid>
+                        
+                        <Grid container spacing={16} alignItems="center" justify="space-between">
+                            <Grid item>
+                                <Button color="inherit" onClick={()=>this.setState({openPC: true})} >Consumo calefactor</Button>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="inherit">{ `${this.props.tempUsuario} W`}</Typography>
+                            </Grid>
+                        </Grid>
 
-                            <Dialog
+                        <Grid container spacing={16} alignItems="center" justify="space-between">
+                            <Grid item>
+                                <Button color="inherit" onClick={()=>this.setState({openPV: true})} >Consumo ventilador</Button>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="inherit">{ `${this.props.tempUsuario} W`}</Typography>
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+                </CardContent>
+
+
+
+
+                {/* Dialogs */}
+                <Dialog
                             disableBackdropClick
                             disableEscapeKeyDown
-                            open = {this.state.open}
+                            open = {this.state.openTemp}
                             onClose={this.handleClose}
                             >
                                 <DialogTitle>Selecciona la temperatura que quieras</DialogTitle>
@@ -74,9 +110,67 @@ class ConfigUsuario extends Component{
                                 </Button>
                                 </DialogActions>
                             </Dialog>
-                        </Grid>
-                    </Grid>
-                </CardContent>
+                            <Dialog
+                            disableBackdropClick
+                            disableEscapeKeyDown
+                            open = {this.state.openPC}
+                            onClose={this.handleClose}
+                            >
+                                <DialogTitle>Indique la potencia de su calefactor</DialogTitle>
+                                <DialogContent style={{display: 'flex', justifyContent:'center'}}>
+                                    <form autoComplete='false'>
+                                        <FormControl>
+                                            <TextField
+                                            id='consumoCalefactor'
+                                            label='Potencia (W)'
+                                            defaultValue={this.state.consumoCa}
+                                            type='number'
+                                            required
+                                            onChange={(e)=>this.setState({consumoCa: e.target.value})} 
+                                             />
+                                        </FormControl>
+                                    </form>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button onClick={this.handleClose} color="primary">
+                                Cancel
+                                </Button>
+                                <Button onClick={()=>console.log('he')} color="primary">
+                                Ok
+                                </Button>
+                                </DialogActions>
+                            </Dialog>
+
+                            <Dialog
+                            disableBackdropClick
+                            disableEscapeKeyDown
+                            open = {this.state.openPV}
+                            onClose={this.handleClose}
+                            >
+                                <DialogTitle>Indique la potencia de su ventilador</DialogTitle>
+                                <DialogContent style={{display: 'flex', justifyContent:'center'}}>
+                                    <form autoComplete='false'>
+                                        <FormControl>
+                                            <TextField
+                                            id='consumoVentilador'
+                                            label='Potencia (W)'
+                                            defaultValue={this.state.consumoVe}
+                                            type='number'
+                                            required
+                                            onChange={(e)=>this.setState({consumoVe: e.target.value})} 
+                                             />
+                                        </FormControl>
+                                    </form>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button onClick={this.handleClose} color="primary">
+                                Cancel
+                                </Button>
+                                <Button onClick={()=>this.handleSend(this.state.tempUsuario)} color="primary">
+                                Ok
+                                </Button>
+                                </DialogActions>
+                            </Dialog>
             </Card>
         )
     }

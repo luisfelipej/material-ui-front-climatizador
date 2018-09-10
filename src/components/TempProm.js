@@ -1,17 +1,29 @@
 import React from "react";
-import { CardContent, Typography, Grid} from "@material-ui/core";
+import { CardContent, Typography, Grid, CircularProgress} from "@material-ui/core";
 import Card from './Card';
 import CardHeader from './CardHeader';
 import CardIcon from './CardIcon';
 
 const TempProm = props => (
     <Card>
-        <CardHeader title="hola"><CardIcon title ={props.tempU}/></CardHeader>
+        <CardHeader title="Temperatura promedio">
+            {
+                (Number(props.prom))
+                ?
+                <CardIcon title ={ `${props.prom}°C` }/>
+                :
+                <CardIcon title><CircularProgress color="inherit"/></CardIcon>
+            }
+        </CardHeader>
         <CardContent>
-            <Grid container>
-                <Typography color="inherit">Temperatura Promedio</Typography>
-                <Typography color="inherit">Temperata Maxima</Typography>
-                <Typography color="inherit">Temperata Minima</Typography>
+            <Grid container justify="space-between">
+                <Grid item>
+                    <Typography color="inherit">Temperatura Máxima: {props.tmax}°C</Typography>
+                    <Typography color="inherit">Temperatura Mínima: {props.tmin}°C</Typography>
+                </Grid>
+                <Grid item>
+                    <Typography color="inherit">Grafico</Typography>
+                </Grid>
             </Grid>
         </CardContent>
     </Card>

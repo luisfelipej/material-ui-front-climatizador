@@ -19,12 +19,12 @@ class Navbar extends Component{
         const { anchorEl } = this.state;
         return(
             <div>
-                <AppBar position="static" style={{backgroundColor: 'rgb(3,169,244)'}}>
+                <AppBar position="static" style={{backgroundColor: 'rgb(20, 20, 29)'}}>
                     <Toolbar>
                         <Grid container justify="space-between" alignItems="center">
-                            <Avatar src="/lookair.png" alt="logo" />
+                            <img src="white-logo.png" width="70px" />
                             <Typography variant="title" color="inherit" >
-                                DASHBOARD
+                                CLIMATIZADOR PORTÁTIL
                             </Typography>
                             <Button
                             aria-owns={anchorEl ? 'simple-menu' : null}
