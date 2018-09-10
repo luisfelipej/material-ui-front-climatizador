@@ -19,10 +19,10 @@ class Navbar extends Component{
         const { anchorEl } = this.state;
         return(
             <div>
-                <AppBar position="static" style={{backgroundColor: 'rgb(20, 20, 29)'}}>
+                <AppBar position="fixed" style={{backgroundColor: 'rgb(20, 20, 29)'}}>
                     <Toolbar>
                         <Grid container justify="space-between" alignItems="center">
-                            <img src="white-logo.png" width="70px" />
+                            <img src="logo-final.png" width="70px" />
                             <Typography variant="title" color="inherit" >
                                 CLIMATIZADOR PORTÁTIL
                             </Typography>

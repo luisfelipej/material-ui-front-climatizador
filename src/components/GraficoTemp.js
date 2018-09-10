@@ -8,7 +8,7 @@ import Card from './Card';
 
 const GraficoTemp = props => (
     <Card style={{position: "relative"}}>
-        <CardHeader title="Temperatura vs Tiempo" variant="body1">
+        <CardHeader  title="Temperatura actual vs Tiempo" variant="body1" >
             {
                 (props.temp)
                 ?

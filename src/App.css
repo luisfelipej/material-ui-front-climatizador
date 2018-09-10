@@ -60,3 +60,6 @@ body{
     color: #fff;
     justify-content: flex-end;
 }
+.amber{
+    background-color: rgb(255,191,0);
+}

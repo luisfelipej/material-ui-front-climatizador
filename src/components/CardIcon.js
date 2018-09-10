@@ -15,6 +15,15 @@ const CardIcon = props => (
                     {props.children}
                 </div>
                 :
+                (props.info)
+                ?
+                <div className="cardIcon" style={{backgroundColor:'rgb(49,74,95)', transition: 'all .5s ease'}}>
+                    <Typography variant="title" color="inherit">
+                        {props.title}
+                    </Typography>
+                    {props.children}
+                </div>
+                :
                 <div className="cardIcon" style={{transition: 'all .5s ease'}}>
                     <Typography variant="title" color="inherit">
                         {props.title}

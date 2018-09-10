@@ -10,6 +10,8 @@ import GraficoTemp from './components/GraficoTemp';
 import TempProm from './components/TempProm';
 import ConfigUsuario from './components/ConfigUsuario';
 import Snack from './components/Snack';
+import Consumos from './components/Consumos';
+import Estados from './components/Estados';
 
 class App extends Component {
   state = {
@@ -22,6 +24,20 @@ class App extends Component {
     tempMinima: 31,
     connected: false,
     contTemp: 0,
+    consumoData:{
+      labels: ['Calefactor', 'Ventilador'],
+      datasets: [
+        {
+          label: 'Consumo (kWh)',
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+          hoverBorderColor: 'rgba(255,99,132,1)',
+          data: [65, 59]
+        }
+      ]
+    },
     grafData: {
       labels: ['5 [s]'],
           datasets: [
@@ -83,13 +99,15 @@ class App extends Component {
     return (
       <div style={{backgroundColor: 'rgb(10,11,17)'}}>
         <Navbar/>
-        <Grid container style={{padding: 40}} spacing={16}>
-        <Grid item xs={12} sm={12} lg={4} md={4}>
-          <TempProm prom={PROM}  tempU={this.state.tempUsuario} tmax={this.state.tempMaxima} tmin={this.state.tempMinima}/>
-          <ConfigUsuario tempUsuario={this.state.tempUsuario} />
-        </Grid>
-          <Grid item sm={12} lg={8} md={8}>
+        <Grid container style={{padding: 40, marginTop:'36px'}} spacing={16}>
+          <Grid item xs={12} sm={12} lg={4} md={4}>
+            <TempProm prom={PROM}  tempU={this.state.tempUsuario} tmax={this.state.tempMaxima} tmin={this.state.tempMinima}/>
+            <Consumos data={this.state.consumoData} />
+            <ConfigUsuario tempUsuario={this.state.tempUsuario} />
+          </Grid>
+          <Grid item sm={12} lg={8} md={8} >
             <GraficoTemp data={this.state.grafData} temp={this.state.temp} />
+            <Estados />
           </Grid>
         </Grid>
 

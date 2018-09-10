@@ -10,9 +10,9 @@ const TempProm = props => (
             {
                 (Number(props.prom))
                 ?
-                <CardIcon title ={ `${props.prom}°C` }/>
+                <CardIcon info title ={ `${props.prom}°C` }/>
                 :
-                <CardIcon title><CircularProgress color="inherit"/></CardIcon>
+                <CardIcon info title><CircularProgress color="inherit"/></CardIcon>
             }
         </CardHeader>
         <CardContent>
