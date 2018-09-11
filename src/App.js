@@ -24,17 +24,23 @@ class App extends Component {
     tempMinima: 31,
     connected: false,
     contTemp: 0,
+    contConsumoCal: 0,
+    contConsumoVen: 0,
+    calefactor: false,
+    ventilador: false,
+    consumoCal: '2000',
+    consumoVen: '2000',
     consumoData:{
       labels: ['Calefactor', 'Ventilador'],
       datasets: [
         {
-          label: 'Consumo (kWh)',
+          label: 'Consumo (W)',
           backgroundColor: 'rgba(255,99,132,0.2)',
           borderColor: 'rgba(255,99,132,1)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(255,99,132,0.4)',
           hoverBorderColor: 'rgba(255,99,132,1)',
-          data: [65, 59]
+          data: [0, 0]
         }
       ]
     },
@@ -81,7 +87,45 @@ class App extends Component {
     });
     socket.on('tempUsuario', (data)=>{
       this.setState({tempUsuario: data});
-    })
+    });
+    socket.on('cON',()=>this.setState({
+      calefactor: true,
+      contConsumoCal: this.state.contConsumoCal + 5,
+      consumoData:{
+        labels: ['Calefactor', 'Ventilador'],
+        datasets: [
+          {
+            label: 'Consumo (W)',
+            backgroundColor: 'rgba(255,99,132,0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+            hoverBorderColor: 'rgba(255,99,132,1)',
+            data: [this.state.consumoData.datasets[0].data[0]+(this.state.consumoCal/3600).toFixed(2)*this.state.contConsumoCal,this.state.consumoData.datasets[0].data[1] ]
+          }
+        ]
+      }}));
+    socket.on('cOFF',()=>this.setState({calefactor: false}));
+    socket.on('vON',()=>this.setState({
+      ventilador: true,
+      contConsumoVen: this.state.contConsumoVen + 5,
+      consumoData:{
+        labels: ['Calefactor', 'Ventilador'],
+        datasets: [
+          {
+            label: 'Consumo (W)',
+            backgroundColor: 'rgba(255,99,132,0.2)',
+            borderColor: 'rgba(255,99,132,1)',
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+            hoverBorderColor: 'rgba(255,99,132,1)',
+            data: [this.state.consumoData.datasets[0].data[0],this.state.consumoData.datasets[0].data[1]+(this.state.consumoVen/3600).toFixed(2)*this.state.contConsumoVen ]
+          }
+        ]
+      }}));
+    socket.on('vOFF',()=>this.setState({ventilador: false}));
+    socket.on('conCa',(consumoCal)=>this.setState({consumoCal}));
+    socket.on('conVe',(consumoVen)=>this.setState({consumoVen}));
   }
   sumaTemps(data){
     let suma = 0;
@@ -95,19 +139,18 @@ class App extends Component {
   render() {
     const SUMTEMP = this.sumaTemps(this.state.grafData.datasets[0].data);
     const PROM = (SUMTEMP/this.state.grafData.datasets[0].data.length).toFixed(1);
-    console.log(PROM)
     return (
       <div style={{backgroundColor: 'rgb(10,11,17)'}}>
-        <Navbar/>
+        <Navbar data={this.state} prom={PROM}/>
         <Grid container style={{padding: 40, marginTop:'36px'}} spacing={16}>
           <Grid item xs={12} sm={12} lg={4} md={4}>
             <TempProm prom={PROM}  tempU={this.state.tempUsuario} tmax={this.state.tempMaxima} tmin={this.state.tempMinima}/>
             <Consumos data={this.state.consumoData} />
-            <ConfigUsuario tempUsuario={this.state.tempUsuario} />
+            <ConfigUsuario tempUsuario={this.state.tempUsuario} conCa={this.state.consumoCal} conVe={this.state.consumoVen} />
           </Grid>
           <Grid item sm={12} lg={8} md={8} >
-            <GraficoTemp data={this.state.grafData} temp={this.state.temp} />
-            <Estados />
+            <GraficoTemp id="graficoTemp" data={this.state.grafData} temp={this.state.temp} />
+            <Estados calefactor={this.state.calefactor} ventilador={this.state.ventilador} />
           </Grid>
         </Grid>
 

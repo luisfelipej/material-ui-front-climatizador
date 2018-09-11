@@ -1,8 +1,11 @@
 import React from "react";
+import { Doughnut } from 'react-chartjs-2';
 import { CardContent, Typography, Grid, CircularProgress} from "@material-ui/core";
 import Card from './Card';
 import CardHeader from './CardHeader';
 import CardIcon from './CardIcon';
+
+
 
 const TempProm = props => (
     <Card>
@@ -17,12 +20,12 @@ const TempProm = props => (
         </CardHeader>
         <CardContent>
             <Grid container justify="space-between">
-                <Grid item>
+                <Grid item lg={8}>
                     <Typography color="inherit">Temperatura Máxima: {props.tmax}°C</Typography>
                     <Typography color="inherit">Temperatura Mínima: {props.tmin}°C</Typography>
                 </Grid>
-                <Grid item>
-                    <Typography color="inherit">Grafico</Typography>
+                <Grid item lg={4}>
+                    {/* <Doughnut data={data} /> */}
                 </Grid>
             </Grid>
         </CardContent>

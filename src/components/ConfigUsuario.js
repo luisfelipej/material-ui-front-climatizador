@@ -24,8 +24,8 @@ class ConfigUsuario extends Component{
         openPC: false,
         openPV: false,
         tempUsuario: this.props.tempUsuario,
-        consumoCa: '',
-        consumoVe: ''
+        consumoCa: this.props.conCa,
+        consumoVe: this.props.conVe
     }
     handleClose = ()=>{
         this.setState({openTemp: false, openPC: false, openPV: false})
@@ -60,7 +60,7 @@ class ConfigUsuario extends Component{
                                 <Button color="inherit" onClick={()=>this.setState({openPC: true})} >Consumo calefactor</Button>
                             </Grid>
                             <Grid item>
-                                <Typography color="inherit">{ `${this.props.tempUsuario} W`}</Typography>
+                                <Typography color="inherit">{ `${this.props.conCa} W`}</Typography>
                             </Grid>
                         </Grid>
 
@@ -69,7 +69,7 @@ class ConfigUsuario extends Component{
                                 <Button color="inherit" onClick={()=>this.setState({openPV: true})} >Consumo ventilador</Button>
                             </Grid>
                             <Grid item>
-                                <Typography color="inherit">{ `${this.props.tempUsuario} W`}</Typography>
+                                <Typography color="inherit">{ `${this.props.conVe} W`}</Typography>
                             </Grid>
                         </Grid>
 
@@ -135,7 +135,10 @@ class ConfigUsuario extends Component{
                                 <Button onClick={this.handleClose} color="primary">
                                 Cancel
                                 </Button>
-                                <Button onClick={()=>console.log('he')} color="primary">
+                                <Button onClick={()=>{
+                                    socket.emit('conCa',this.state.consumoCa);
+                                    this.setState({openPC: false})
+                                }} color="primary">
                                 Ok
                                 </Button>
                                 </DialogActions>
@@ -166,7 +169,10 @@ class ConfigUsuario extends Component{
                                 <Button onClick={this.handleClose} color="primary">
                                 Cancel
                                 </Button>
-                                <Button onClick={()=>this.handleSend(this.state.tempUsuario)} color="primary">
+                                <Button onClick={()=>{
+                                    socket.emit('conVe',this.state.consumoVe);
+                                    this.setState({openPV: false})
+                                }} color="primary">
                                 Ok
                                 </Button>
                                 </DialogActions>
